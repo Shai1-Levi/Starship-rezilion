@@ -1,3 +1,20 @@
+locals {
+  project_id       =  var.project_id 
+  network          =  var.network 
+  image            =  var.vm-instance-image 
+  user_ssh         =  var.user_name 
+  web_servers = {
+    vm-terraform-starship--000-staging = {
+      machine_type = "f1-micro"
+      zone         = "us-central1-a"
+    }
+    # vm-terraform-starship--001-staging = {
+    #   machine_type = "f1-micro"
+    #   zone         = "us-central1-a"
+    # }
+  }
+}
+
 provider "tls" {
   // no config needed
 }
@@ -9,15 +26,19 @@ resource "tls_private_key" "ssh" {
 
 resource "local_file" "ssh_private_key_pem" {
   content         = tls_private_key.ssh.private_key_pem
-  filename        = ".ssh/google_compute_engine"
+  filename        = var.ssh_fine_name
   file_permission = "0400"
+}
+
+data "http" "devip" {
+  url = "http://ipv4.icanhazip.com"
 }
 
 resource "google_compute_firewall" "http-server" {
   # count        = "${var.node_count}"
   # name    = "default-allow-http-terraform-${count.index}"
   name    = "default-allow-http-terraform"
-  network = "default"
+  network = local.network
 
   allow {
     protocol = "tcp"
@@ -27,8 +48,8 @@ resource "google_compute_firewall" "http-server" {
   priority = 1000
 
   // Allow traffic from my IP to instances with an http-server tag
-  source_ranges = ["${var.my_ip}"]
-  target_tags   = ["http-server"] #"web"'
+  source_ranges = ["${chomp(data.http.devip.body)}/32"]
+  target_tags   = ["http-server"] 
 }
 
 resource "google_compute_firewall" "ssh-rule" {
@@ -40,32 +61,31 @@ resource "google_compute_firewall" "ssh-rule" {
     protocol = "tcp"
     ports = ["22"]
   }
-  # target_tags = ["vm-terraform-starship-${count.index}"]
   target_tags = ["vm-terraform-starship"]
-  source_ranges = ["${var.my_ip}"]
+  source_ranges = ["${chomp(data.http.devip.body)}/32"]
 }
 
 resource "google_compute_network" "vpc_network" {
   name = "vm-terraform-starship"
 }
 
-
 resource "google_compute_instance" "default" {
   # count        = "${var.node_count}"
   # name         = "vm-terraform-starship-${count.index}"
-  name         = "vm-terraform-starship"
-  machine_type = "f1-micro"
-  zone         = "us-central1-a"
+  for_each              = local.web_servers
+  name                  = each.key
+  machine_type          = each.value.machine_type
+  zone                  = each.value.zone 
   tags = ["http-server", "ssh-rule"] // Apply the firewall rule to allow external IPs to access this instance
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-1804-bionic-v20220331a"
+      image = local.image
     }
   }
 
   network_interface {
-    network = "default"
+    network = local.network
 
     access_config {
       // Include this section to give the VM an external ip address
@@ -75,15 +95,11 @@ resource "google_compute_instance" "default" {
   metadata = {
     ssh-keys = "${var.gce_ssh_user}:${tls_private_key.ssh.public_key_openssh}"
   }
-}
 
-resource "null_resource" "cluster" {
-  depends_on  =   [google_compute_instance.default]
-  
   connection {
     type = "ssh"
-    user = "shai4458"
-    host = google_compute_instance.default.network_interface[0].access_config[0].nat_ip
+    user = local.user_ssh
+    host = self.network_interface.0.access_config.0.nat_ip
     private_key = "${file("~/.ssh/google_compute_engine")}"
     timeout = "5m"
   }  
