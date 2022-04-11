@@ -1,6 +1,6 @@
 # variable "node_count" {
 #   type = number
-#   default = "1"
+#   default = "2"
 # }
 
 variable "docker-image" {
@@ -12,7 +12,7 @@ variable "docker-image" {
 variable "my_ip" {
   type        = string
   description = "developer ip"
-  default     =  "84.110.38.122" #"82.114.44.125/32"
+  default     = "82.114.45.72/32" #"84.110.38.122"
 }
 
 variable "gce_ssh_user" {
@@ -22,8 +22,3 @@ variable "gce_ssh_pub_key_file" {
   default = "google_compute_engine.pub"
 }
 
-
-
-# variable "google_ip" {
-	
-# }
