@@ -18,6 +18,9 @@ Change the variables in variable.tf to your details: project-id, region, instanc
 
 Note: the machine type has been choosen to the smallest machine.
 
+# Connect Terraform to GCP
+Run the follow command in gcloud cli 
+ - export GOOGLE_APPLICATION_CREDENTIALS={{path}}
 
 This command sets up the environment.
  - terraform init
