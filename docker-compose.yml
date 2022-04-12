@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  web:
+    image: dockerid1011shai/website:v1
+    ports:
+      - "80:80"
+
+    environment:
+      - STORE_LIST=[305, 29, 148]
+      - API_KEY=d35af1556ed30e0098eaf8c9bf829057b7cca565
+      - ME_CONFIG_MONGODB_URL=mongodb://citizix:S3cret@127.0.0.1:27017/
+      - HOST=mongoHost
+      - PORT=27017
+      - DB_NAME=rezilion
+      - COLLECTION_NAME=collection
+      - MONGO_INITDB_ROOT_USERNAME=citizix
+      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+  
+    volumes:
+      - ./:/apps
+
+    links:
+      - mongodb
+
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:5.0
+    hostname: mongoHost
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/apps/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=citizix
+      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+      
