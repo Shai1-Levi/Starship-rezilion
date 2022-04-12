@@ -19,16 +19,16 @@ Change the variables in variable.tf to your details: project-id, region, instanc
 Note: the machine type has been choosen to the smallest machine.
 
 
-# This command sets up the environment.
+This command sets up the environment.
 terraform init
 
-# This command reports which configuration will be applied.
+This command reports which configuration will be applied.
 terraform plan
 
-# This command approves the changes automatically and applies the configuration defined on Terraform files.
+This command approves the changes automatically and applies the configuration defined on Terraform files.
 terraform apply 
 
-# This command destroy the environment
+This command destroy the environment
 terraform destroy
 
 # This repository has an access via HTTP and SSH protocols.
