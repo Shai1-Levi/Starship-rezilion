@@ -20,16 +20,16 @@ Note: the machine type has been choosen to the smallest machine.
 
 
 This command sets up the environment.
-terraform init
+ - terraform init
 
 This command reports which configuration will be applied.
-terraform plan
+ - terraform plan
 
 This command approves the changes automatically and applies the configuration defined on Terraform files.
-terraform apply 
+ - terraform apply 
 
 This command destroy the environment
-terraform destroy
+ - terraform destroy
 
 # This repository has an access via HTTP and SSH protocols.
 HTTP can be access from any IP.
