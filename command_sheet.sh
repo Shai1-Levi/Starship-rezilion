@@ -24,10 +24,10 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-
 # sudo chmod +x /usr/local/bin/docker-compose
 
 # build docker
-sudo docker build -t mongoapp .
+sudo docker pull dockerid1011shai/website:v1
 
 # run docker-compose
-sudo docker compose up -d
+sudo dockercompose up -d
 
 terraform destroy -auto-approve
 #Counteracting the command above, this removes everything created.

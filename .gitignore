@@ -1,6 +1,7 @@
 #ignore 
 credentials.json
 .ssh
+.sh
 
 # Local .terraform directories
 **/.terraform/*

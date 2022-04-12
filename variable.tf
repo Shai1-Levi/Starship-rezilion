@@ -3,9 +3,6 @@ variable "node_count" {
   default = "2"
 }
 
-variable "gce_ssh_user" {
-  default = "shai4458"
-}
 variable "gce_ssh_pub_key_file" {
   default = "google_compute_engine.pub"
 }
@@ -16,28 +13,17 @@ variable "project_id" {
   default     = "elevated-valve-317623"
 }
 
-variable "network" {
-  type        = string
-  description = "name of your network"
-  default     = "default"
-}
-
 variable "vm-instance-image" {
   type        = string
   description = "instance machine type"
   default     = "ubuntu-1804-bionic-v20220331a" 
 }
 
-variable "user_name" {
-  type        = string
-  description = "instance machine type"
-  default     = "shai4458"
-}
-
-variable "ssh_fine_name" {
-  type        = string
-  description = "file name that will save localy on your computer"
-  default     = ".ssh/google_compute_engine"
+variable "machine_type" {
+  type = string
+  description = "The kind of the machine type to create"
+  default = "f1-micro"
+  
 }
 
 

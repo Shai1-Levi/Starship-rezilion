@@ -1,32 +1,25 @@
 locals {
   project_id       =  var.project_id 
-  network          =  var.network 
+  network          =  "default"
   image            =  var.vm-instance-image 
-  user_ssh         =  var.user_name 
+  user_ssh         =  "shai4458"
   web_servers = {
     vm-terraform-starship--000-staging = {
-      machine_type = "f1-micro"
+      machine_type = var.machine_type
       zone         = "us-central1-a"
     }
-    # vm-terraform-starship--001-staging = {
-    #   machine_type = "f1-micro"
-    #   zone         = "us-central1-a"
-    # }
+    # To add more servers just copy the above and change the details
   }
 }
 
-provider "tls" {
-  // no config needed
-}
-
-resource "tls_private_key" "ssh" {
+resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "local_file" "ssh_private_key_pem" {
-  content         = tls_private_key.ssh.private_key_pem
-  filename        = var.ssh_fine_name
+  content         = tls_private_key.ssh_key.private_key_pem
+  filename        = ".ssh/google_compute_engine"
   file_permission = "0400"
 }
 
@@ -35,8 +28,6 @@ data "http" "devip" {
 }
 
 resource "google_compute_firewall" "http-server" {
-  # count        = "${var.node_count}"
-  # name    = "default-allow-http-terraform-${count.index}"
   name    = "default-allow-http-terraform"
   network = local.network
 
@@ -47,20 +38,19 @@ resource "google_compute_firewall" "http-server" {
 
   priority = 1000
 
-  // Allow traffic from my IP to instances with an http-server tag
-  source_ranges = ["${chomp(data.http.devip.body)}/32"]
+  // Allow traffic from all IP to instances with an http-server tag
+  source_ranges = ["0.0.0.0/0"]
   target_tags   = ["http-server"] 
 }
 
 resource "google_compute_firewall" "ssh-rule" {
-  # count        = "${var.node_count}"
-  # name = "vm-terraform-starship-${count.index}"
   name = "vm-terraform-starship"
   network = google_compute_network.vpc_network.name
   allow {
     protocol = "tcp"
     ports = ["22"]
   }
+  // Allow traffic from my IP to instances with an http-server tag
   target_tags = ["vm-terraform-starship"]
   source_ranges = ["${chomp(data.http.devip.body)}/32"]
 }
@@ -70,8 +60,6 @@ resource "google_compute_network" "vpc_network" {
 }
 
 resource "google_compute_instance" "default" {
-  # count        = "${var.node_count}"
-  # name         = "vm-terraform-starship-${count.index}"
   for_each              = local.web_servers
   name                  = each.key
   machine_type          = each.value.machine_type
@@ -93,7 +81,7 @@ resource "google_compute_instance" "default" {
   }
 
   metadata = {
-    ssh-keys = "${var.gce_ssh_user}:${tls_private_key.ssh.public_key_openssh}"
+    ssh-keys = "${local.user_ssh}:${tls_private_key.ssh_key.public_key_openssh}"
   }
 
   connection {
@@ -103,11 +91,6 @@ resource "google_compute_instance" "default" {
     private_key = "${file("~/.ssh/google_compute_engine")}"
     timeout = "5m"
   }  
-
-  provisioner "file"{
-    source = "getPrice.py"
-    destination = "getPrice.py"  
-  }
 
   provisioner "file"{
     source = "docker-compose.yml"
@@ -130,7 +113,7 @@ resource "google_compute_instance" "default" {
       # sudo apt update
       "sudo apt-get install --yes docker-ce",
 
-      # build docker
+      # pull docker image from docker hub
       "sudo docker pull dockerid1011shai/website:v1",
 
       # run docker-compose
