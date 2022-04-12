@@ -4,6 +4,10 @@ This repository is a small website that use the superget API.
 
 To use this repository follow the actions:
 
+Create a project in Google Cloud Platform - 
+
+https://cloud.google.com/resource-manager/docs/creating-managing-projects
+
 Create a User in DockerHub - 
 
 https://hub.docker.com
@@ -26,7 +30,7 @@ This command reports which configuration will be applied.
  - terraform plan
 
 This command approves the changes automatically and applies the configuration defined on Terraform files.
- - terraform apply 
+ - terraform apply -auto-approve
 
 This command destroy the environment
  - terraform destroy
@@ -34,3 +38,7 @@ This command destroy the environment
 # This repository has an access via HTTP and SSH protocols.
 HTTP can be access from any IP.
 SSH can be access only from the developer IP.
+
+# URL website
+The URL website will print to the shell when the command terraform apply is finish.
+In addition, it can the URL can be found also in GCP -> Compute Engine -> VM instance at the section of external IP.
