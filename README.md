@@ -28,6 +28,9 @@ terraform plan
 # This command approves the changes automatically and applies the configuration defined on Terraform files.
 terraform apply 
 
+# This command destroy the environment
+terraform destroy
+
 # This repository has an access via HTTP and SSH protocols.
 HTTP can be access from any IP.
 SSH can be access only from the developer IP.
