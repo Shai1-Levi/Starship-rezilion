@@ -1,5 +1,4 @@
 locals {
-  project_id       =  var.project_id 
   network          =  "default"
   image            =  var.vm-instance-image 
   user_ssh         =  "shai4458"

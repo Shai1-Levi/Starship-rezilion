@@ -1,6 +1,6 @@
 provider "google" {
  credentials = "${file("credentials.json")}"
- project = "elevated-valve-317623"
+ project = var.project_id
  region = "us-central-1"
 }
 
