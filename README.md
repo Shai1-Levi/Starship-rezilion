@@ -8,10 +8,6 @@ Create a project in Google Cloud Platform -
 
 https://cloud.google.com/resource-manager/docs/creating-managing-projects
 
-Create a User in DockerHub - 
-
-https://hub.docker.com
-
 Download Terraform -
 
 Choose your os before downloading the Terraform
