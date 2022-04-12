@@ -84,15 +84,15 @@ resource "google_compute_instance" "default" {
   }
 
   connection {
-    type = "ssh"
-    user = local.user_ssh
-    host = self.network_interface.0.access_config.0.nat_ip
+    type        = "ssh"
+    user        = local.user_ssh
+    host        = self.network_interface.0.access_config.0.nat_ip
     private_key = "${file("~/.ssh/google_compute_engine")}"
-    timeout = "5m"
+    timeout     = "5m"
   }  
 
   provisioner "file"{
-    source = "docker-compose.yml"
+    source      = "docker-compose.yml"
     destination = "docker-compose.yml"  
   }
 

@@ -3,6 +3,11 @@ variable "project_id" {
   description = "name of the project_id on gcp console"
   default     = "elevated-valve-317623"
 }
+variable "region" {
+  type        = string
+  description = "the ragion the project is loacted"
+  default     = "us-central-1"
+}
 
 variable "vm-instance-image" {
   type        = string
@@ -11,9 +16,9 @@ variable "vm-instance-image" {
 }
 
 variable "machine_type" {
-  type = string
+  type        = string
   description = "The kind of the machine type to create"
-  default = "f1-micro"
+  default     = "f1-micro"
 }
 
 
