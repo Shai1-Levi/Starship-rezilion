@@ -1,7 +1,8 @@
 
 # Introduction
 
-This is a Terraform configuration that sets up a Docker Container on an existing VPC with a configurable amount of VM instances. 
+This is a Terraform configuration that sets up a Docker Container on a VM instaces, with a configurable amount of VM instances. 
+Those VM's are running in existing VPC.
 
 
 
@@ -13,7 +14,6 @@ This is a Terraform configuration that sets up a Docker Container on an existing
 
 
 # Preparations
-
 
 
 ### GCP account
@@ -29,7 +29,10 @@ Run the following command in gcloud cli -
 
     export GOOGLE_APPLICATION_CREDENTIALS={{path}}
 
+path - the path in your local computer to the google cloud SDK file.
+
 That give the ability to connect terraform to GCP.
+
 
 
 
@@ -39,6 +42,7 @@ In the file variables.tf update to your VM instances information.
     project-id, region, instance-image, machine type
 
 Note: the machine type has been choosen to the smallest machine.
+
 
 
 
@@ -58,8 +62,12 @@ This command will show either syntax errors or list of resources will be created
 
     terraform apply
 
+After terraform apply completes, the website URL will be printed to the shell.
 
-This command will build and run all resources in the *.tf files. If you run this command many times, Terraform will destroy previous instances before creating new ones. That is it. Now you have fully functioned docker container in GCP.
+
+This command will build and run all resources in the *.tf files.
+
+If you run this command after you changed details in *.tf files, Terraform will destroy previous instances before creating new ones. That is it. Now you have fully functioned docker container in GCP.
 
 If you want to terminate instances and destroy the configuration you may call:
 
@@ -67,16 +75,29 @@ If you want to terminate instances and destroy the configuration you may call:
 
 
 
-# HTTP and SSH protocols of VM istances
 
-HTTP can be access from any IP.
+# How to connect to the VM?
 
-SSH can be access only from the developer IP.
+SSH can only be accessed from the developer IP address.
+
+Run the command in shell to connect the VM instancs.
+
+    ssh -i your_ssh_key user_name@external_IP
+
+ * your_ssh_key can be found in the folder that this github files has been download.
 
 
 
-# URL website
+
+# VM Firewall rules
+
+The google_compute_firewall which is responsibole of the VM instace firewall is allow HTTP trafic from any IP address.
+
+
+
+
+# Website URL 
 
 The URL website will print to the shell when the command terraform apply is finish.
 
-In addition, it can the URL can be found also in GCP -> Compute Engine -> VM instance at the section of external IP.
+In addition, the URL can be found also in GCP -> Compute Engine -> VM instance at the section of external IP.
