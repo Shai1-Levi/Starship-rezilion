@@ -22,3 +22,5 @@ variable "machine_type" {
 }
 
 
+
+
