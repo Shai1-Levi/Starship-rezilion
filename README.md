@@ -70,9 +70,9 @@ This command will build and run all resources in the *.tf files.
 
 
 
-If you run this command after you changed details in *.tf files, Terraform will destroy previous instances before creating new ones.
+ - If you run this command after you changed details in *.tf files, Terraform will update the previous instances or destroy previous instances before creating new ones.
 
-That is it. Now you have fully functioned docker container in GCP.
+That's it. Now you have fully functioned docker container in GCP.
 
 If you want to terminate instances and destroy the configuration you may call:
 
@@ -87,10 +87,10 @@ SSH can only be accessed from the developer IP address.
 
 Run the command in shell to connect the VM instancs.
 
-    ssh -i your_ssh_key your_username@external_IP
+    ssh -i your_ssh_key your_gcp_username@external_IP
 
- * your_ssh_key can be found in the folder that this github project files has been download.
-
+ * your_ssh_key can be found in GCP -> Compute Engine -> VM instance -> metadata
+ * external_IP - the external_IP of the VM instace
 
 
 
