@@ -39,7 +39,7 @@ That give the ability to connect terraform to GCP.
 # VM instance configuration
 
 In the file variables.tf update to your VM instances information.
-    project-id, region, instance-image, machine type, username.
+    project-id, region, instance-image, machine type.
 
 Note: the machine type has been choosen to the smallest machine.
 

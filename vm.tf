@@ -1,7 +1,7 @@
 locals {
   network          =  "default"
   image            =  var.vm-instance-image 
-  user_ssh         =  var.username
+  user_ssh         =   "${split("@", data.google_client_openid_userinfo.me.email)[0]}"
   web_servers = {
     vm-terraform-starship--000-staging = {
       machine_type = var.machine_type
@@ -25,6 +25,8 @@ resource "local_file" "ssh_private_key_pem" {
 data "http" "devip" {
   url = "http://ipv4.icanhazip.com"
 }
+
+data "google_client_openid_userinfo" "me" {}
 
 resource "google_compute_firewall" "http-server" {
   name    = "default-allow-http-terraform"
