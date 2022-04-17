@@ -1,7 +1,7 @@
 locals {
   network          =  "default"
   image            =  var.vm-instance-image 
-  user_ssh         =  "shai4458"
+  user_ssh         =  var.username
   web_servers = {
     vm-terraform-starship--000-staging = {
       machine_type = var.machine_type

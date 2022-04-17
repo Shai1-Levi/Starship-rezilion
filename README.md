@@ -29,7 +29,7 @@ Run the following command in gcloud cli -
 
     export GOOGLE_APPLICATION_CREDENTIALS={{path}}
 
-path - the path in your local computer to the google cloud SDK file.
+path - the path in your local computer to the google cloud SDK folder.
 
 That give the ability to connect terraform to GCP.
 
@@ -65,9 +65,14 @@ This command will show either syntax errors or list of resources will be created
 After terraform apply completes, the website URL will be printed to the shell.
 
 
+
 This command will build and run all resources in the *.tf files.
 
-If you run this command after you changed details in *.tf files, Terraform will destroy previous instances before creating new ones. That is it. Now you have fully functioned docker container in GCP.
+
+
+If you run this command after you changed details in *.tf files, Terraform will destroy previous instances before creating new ones.
+
+That is it. Now you have fully functioned docker container in GCP.
 
 If you want to terminate instances and destroy the configuration you may call:
 
@@ -82,9 +87,9 @@ SSH can only be accessed from the developer IP address.
 
 Run the command in shell to connect the VM instancs.
 
-    ssh -i your_ssh_key user_name@external_IP
+    ssh -i your_ssh_key your_username@external_IP
 
- * your_ssh_key can be found in the folder that this github files has been download.
+ * your_ssh_key can be found in the folder that this github project files has been download.
 
 
 

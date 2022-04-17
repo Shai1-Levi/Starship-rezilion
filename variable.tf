@@ -21,4 +21,11 @@ variable "machine_type" {
   default     = "f1-micro"
 }
 
+variable "username"{
+  type = string
+  description = "your username"
+  default = "ubuntu"
+}
+
+
 
