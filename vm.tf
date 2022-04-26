@@ -60,7 +60,7 @@ resource "google_compute_firewall" "vault-rule" {
 
   // Allow traffic from all IP to instances with an http-server tag
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["http-server"] 
+  target_tags   = ["vault-rule"] 
 }
 
 resource "google_compute_firewall" "ssh-rule" {
@@ -135,15 +135,20 @@ resource "google_compute_instance" "default" {
       # sudo apt update
       "sudo apt-get install --yes docker-ce",
 
+      # create bridge between to containers
+      "sudo docker network create web-bridge",
+
       # pull vault container from docker hub
       "sudo docker pull vault",
-      "sudo docker run -p 8200:8200 --cap-add=IPC_LOCK -d -e 'VAULT_DEV_ROOT_TOKEN_ID=superget-api-key' vault",
+      "sudo docker run -p 8200:8200 --cap-add=IPC_LOCK -d --name vault --net web-bridge -e 'VAULT_DEV_ROOT_TOKEN_ID=superget-api-key' vault",
 
       # pull docker image from docker hub
       "sudo docker pull dockerid1011shai/website:v1",      
 
       # run docker-compose
-      "sudo docker compose up -d"
+      "sudo docker compose up -d",
+      "sudo docker rename shai4458-web-1 webapp",
+      "sudo docker network connect web-bridge webapp"      
     ]
   }
 }
