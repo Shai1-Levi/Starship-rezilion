@@ -88,24 +88,16 @@ def main_func(product_name):
     # MONGODB - section
     # read document
     exists = db_cursor.find({"product_id": product_id}) # count_documents({}) #
-    # data_lst = list(exists)
     mongo_retived = {}
     mongo_retived['vault'] = api_key
     for ele in exists:
         mongo_retived[ele['store_id']] = ele['product_lowest_price']
     if len(mongo_retived) > 1:
-        # data_lst = dict(exists)
-        # data_lst = [(ele[]) for ele in exists]
         with open("ans1.txt", 'w') as f:
             json.dump(mongo_retived, f)
         return mongo_retived
 
         
-    # TEXT FILE - section
-    # with open('ans.txt', 'r') as fobj:
-    #     data_load = json.load(fobj)
-    
-    # if product_name in data_load.values():
 
     stores_and_prices = []
     # get product price from stores
@@ -129,15 +121,10 @@ def main_func(product_name):
     data = {'product_id': product_id,
             'store_id': stores_and_prices_sorted[0][0],
             'product_lowest_price': stores_and_prices_sorted[0][1]}
-    # {"product": {"store_id": "lowest_price"}}
 
     # # MONGODB - section
     # insert document
     db_cursor.insert_one(data)
-
-
-    # with open("ans.txt", 'w') as f:
-    #     json.dump(data, f)
 
     return dict({"store_id":stores_and_prices_sorted[0][0],
                 "price": stores_and_prices_sorted[0][1],
@@ -147,12 +134,5 @@ def main_func(product_name):
 # # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
-    # store_list_id = {305, 28, 148}
-    # product_name = "במבה אסם - 200 גרם"  # product id = 5365
-    # api_key = "d35af1556ed30e0098eaf8c9bf829057b7cca565"
-    # main_func()
 
-    # MONGO - COMMANDS 
-    # docker-compose exec mongodb /bin/sh
-    # - ME_CONFIG_MONGODB_URL="mongodb://citizix:S3cret@127.0.0.1:27017/docker-mongo"
 
