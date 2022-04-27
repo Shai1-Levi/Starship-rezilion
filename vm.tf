@@ -119,6 +119,11 @@ resource "google_compute_instance" "default" {
     destination = "docker-compose.yml"  
   }
 
+  provisioner "file"{
+    source      = "default.conf"
+    destination = "default.conf"  
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get -y  update",
@@ -143,12 +148,13 @@ resource "google_compute_instance" "default" {
       "sudo docker run -p 8200:8200 --cap-add=IPC_LOCK -d --name vault --net web-bridge -e 'VAULT_DEV_ROOT_TOKEN_ID=superget-api-key' vault",
 
       # pull docker image from docker hub
-      "sudo docker pull dockerid1011shai/website:v1",      
+      "sudo docker pull dockerid1011shai/website:v2",      
 
       # run docker-compose
       "sudo docker compose up -d",
-      "sudo docker rename shai4458-web-1 webapp",
-      "sudo docker network connect web-bridge webapp"      
+      #"sudo docker rename shai4458-web-1 webapp",
+      "sudo docker network connect web-bridge webapp",
+      "sudo docker network connect shai4458_default webapp",
     ]
   }
 }

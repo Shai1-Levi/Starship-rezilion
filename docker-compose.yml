@@ -1,9 +1,10 @@
 version: "3.7"
 services:
   web:
-    image: dockerid1011shai/website:v1
+    image: dockerid1011shai/website:v3
+    container_name: webapp
     ports:
-      - "80:80"
+      - "5000:5000"
 
     environment:
       - STORE_LIST=[305, 29, 148]
@@ -15,7 +16,9 @@ services:
       - COLLECTION_NAME=collection
       - MONGO_INITDB_ROOT_USERNAME=citizix
       - MONGO_INITDB_ROOT_PASSWORD=S3cret
-  
+
+    command: gunicorn --bind 0.0.0.0:5000 --timeout 600 "getPrice:app"
+
     volumes:
       - ./:/apps
 
@@ -25,8 +28,26 @@ services:
     depends_on:
       - mongodb
 
+    networks:
+        my-network:
+          aliases:
+            - web-app    
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    networks:
+      - my-network
+    depends_on:
+      - web
+
   mongodb:
     image: mongo:5.0
+    container_name: mongo
     hostname: mongoHost
     ports:
       - 27017:27017
@@ -36,3 +57,5 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=citizix
       - MONGO_INITDB_ROOT_PASSWORD=S3cret
       
+networks:
+  my-network:
