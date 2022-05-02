@@ -147,8 +147,7 @@ resource "google_compute_instance" "default" {
       "sudo docker pull vault",
       "sudo docker run -p 8200:8200 --cap-add=IPC_LOCK -d --name vault --net web-bridge -e 'VAULT_DEV_ROOT_TOKEN_ID=superget-api-key' vault",
 
-      # pull docker image from docker hub
-      "sudo docker pull dockerid1011shai/website:v2",      
+     
 
       # run docker-compose
       "sudo docker compose up -d",
@@ -158,3 +157,7 @@ resource "google_compute_instance" "default" {
     ]
   }
 }
+
+
+
+
