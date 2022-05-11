@@ -56,6 +56,23 @@ def create_read_api_key_from_vault():
 
     return  api_key
 
+
+def get_product_price_from_stores(api_key, product_id, store_list_id):
+    stores_and_prices = []
+    for store in store_list_id:
+        params = {"api_key": api_key,
+                  "store_id": store,
+                  "product_id": product_id,
+                  "action": "GetPriceByProductID"}
+
+        # API - SUPER GET
+        # response_stores = requests.post(url, params)
+        # stores_data = response_stores.json()
+        # price = stores_data[0]["store_product_price"]  # store_product_last_price
+        price = api_data[int(store)]
+        stores_and_prices.append((store, price))
+    return stores_and_prices
+
 # @app.route('/my_route/<product_name>', methods=['GET'])
 @app.route("/<product_name>", methods=['GET'])
 def main_func(product_name):
@@ -84,7 +101,7 @@ def main_func(product_name):
 
     # MONGODB - section
     # read document
-    exists = db_cursor.find({"product_id": product_id}) # count_documents({}) #
+    exists = db_cursor.find({"product_id": product_id}) 
     mongo_retived = {}
     mongo_retived['vault'] = api_key
     for ele in exists:
@@ -94,25 +111,10 @@ def main_func(product_name):
             json.dump(mongo_retived, f)
         return mongo_retived
 
-        
-
-    stores_and_prices = []
+            
     # get product price from stores
-    for store in store_list_id:
-
-        params = {"api_key": api_key,
-                  "store_id": store,
-                  "product_id": product_id,
-                  "action": "GetPriceByProductID"}
-
-        # API - SUPER GET
-        # response_stores = requests.post(url, params)
-        # stores_data = response_stores.json()
-        # price = stores_data[0]["store_product_price"]  # store_product_last_price
-
-        price = api_data[int(store)]
-        stores_and_prices.append((store, price))
-
+    stores_and_prices = get_product_price_from_stores(api_key, product_id, store_list_id)
+    
     stores_and_prices_sorted = sorted(stores_and_prices, key=lambda p: p[1])  # first is the min
 
     data = {'product_id': product_id,
