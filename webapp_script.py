@@ -44,17 +44,7 @@ def index():
         + res
     )
 
-
-# @app.route('/my_route/<product_name>', methods=['GET'])
-@app.route("/<product_name>", methods=['GET'])
-def main_func(product_name):
-    print('product_name', product_name)
-    # store_list_id = [305, 28, 148]
-    store_list_id = os.environ["STORE_LIST"][1:-1].split(", ")
-    db_cursor = getMongoCursor()
-    
-    api_key = os.environ["API_KEY"]
-
+def create_read_api_key_from_vault():
     client = hvac.Client( url='http://vault:8200', token='superget-api-key')
     create_response = client.secrets.kv.v2.create_or_update_secret(path='secret-api-key', secret=dict(apikey='d35af1556ed30e0098eaf8c9bf829057b7cca565'),)
 
@@ -64,15 +54,22 @@ def main_func(product_name):
 
     api_key = read_response['data']['data']['apikey']
 
-    if api_key != 'd35af1556ed30e0098eaf8c9bf829057b7cca565':
-        sys.exit('unexpected password')
+    return  api_key
 
-    print('Access granted!')
+# @app.route('/my_route/<product_name>', methods=['GET'])
+@app.route("/<product_name>", methods=['GET'])
+def main_func(product_name):
+    print('product_name', product_name)
+    # store_list_id = [305, 28, 148]
+    store_list_id = os.environ["STORE_LIST"][1:-1].split(", ")
+    db_cursor = getMongoCursor()
+    
+    # api_key = os.environ["API_KEY"]
 
-
+    api_key = create_read_api_key_from_vault()
+    
     url = "https://api.superget.co.il"
 
-   
     # get product ID
     params = {"api_key": api_key,
               "product_name": [product_name],

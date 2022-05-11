@@ -17,7 +17,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=citizix
       - MONGO_INITDB_ROOT_PASSWORD=S3cret
 
-    command: gunicorn --bind 0.0.0.0:5000 --timeout 600 "getPrice:app"
+    command: gunicorn --bind 0.0.0.0:5000 --timeout 600 "webapp_script:app"
 
     volumes:
       - ./:/apps

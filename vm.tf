@@ -46,22 +46,22 @@ resource "google_compute_firewall" "http-server" {
   target_tags   = ["http-server"] 
 }
 
-resource "google_compute_firewall" "vault-rule" {
-  project = local.project_id
-  name    = "default-allow-vault-terraform"
-  network = local.network
+# resource "google_compute_firewall" "vault-rule" {
+#   project = local.project_id
+#   name    = "default-allow-vault-terraform"
+#   network = local.network
 
-  allow {
-    protocol = "tcp"
-    ports    = ["8200"]
-  }
+#   allow {
+#     protocol = "tcp"
+#     ports    = ["8200"]
+#   }
 
-  priority = 1000
+#   priority = 1000
 
-  // Allow traffic from all IP to instances with an http-server tag
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["vault-rule"] 
-}
+#   // Allow traffic from all IP to instances with an http-server tag
+#   source_ranges = ["0.0.0.0/0"]
+#   target_tags   = ["vault-rule"] 
+# }
 
 resource "google_compute_firewall" "ssh-rule" {
   project = local.project_id
