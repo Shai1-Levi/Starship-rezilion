@@ -154,6 +154,14 @@ resource "google_compute_instance" "default" {
       #"sudo docker rename shai4458-web-1 webapp",
       "sudo docker network connect web-bridge webapp",
       "sudo docker network connect shai4458_default webapp",
+
+      #install trivy
+      "sudo apt-get install wget apt-transport-https gnupg lsb-release",
+      "wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -",
+      "echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list",
+      "sudo apt-get update",
+      "sudo apt-get install trivy",
+      "trivy -d image -f json -o trivyoutput.json nginx"
     ]
   }
 }

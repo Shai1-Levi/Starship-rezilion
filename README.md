@@ -99,20 +99,20 @@ Run the command in shell to connect the VM instancs.
 The google_compute_firewall which is responsibole of the VM instace firewall is allow HTTP trafic from any IP address.
 
 
-# Cotnainers in use
+# Cotnainers:
 
-### webapp container
-Container that sending api request to superget api and analyze the data
+### Webapp container
+Container that sending api request to superget api and analyze the data.
 
+### NGINX container
+NGINX is a popular lightweight web application that is used for developing server-side applications, 
+the container recive http request and forwad them to webapp container.
 
-### nginx container
-web container that recive http request and forwad them to webapp container
+### VAULT container
+Vault Container is a tool for securely accessing secrets, in this case is API key.
 
-### vault container
-Container that keep secrets as api key
-
-### mongodb container
-Container that stored Processed information from webapp
+### MongoDB container
+Container that stored processed information from webapp.
 
 ![Alt text](https://github.com/Shai1-Levi/Starship-rezilion/blob/update-readme-and-python-changes/architecture.jpg)
 
