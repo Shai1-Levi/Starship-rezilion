@@ -114,7 +114,7 @@ Container that keep secrets as api key
 ### mongodb container
 Container that stored Processed information from webapp
 
-https://github.com/Shai1-Levi/Starship-rezilion/blob/update-readme-and-python-changes/architecture.jpg
+![Alt text](https://github.com/Shai1-Levi/Starship-rezilion/blob/update-readme-and-python-changes/architecture.jpg)
 
 # Website URL 
 
