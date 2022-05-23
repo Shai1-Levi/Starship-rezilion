@@ -4,9 +4,14 @@ from flask import Flask, request
 import json
 import pymongo
 import hvac
+from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
 
 
 mongo_data = {}
@@ -28,22 +33,12 @@ def getMongoCursor():
     db_cursor = mydb[os.environ["COLLECTION_NAME"]]
     return db_cursor
 
+
 @app.route('/', methods=['GET'])
-def index():
-    prod = request.args.get("product_name", "")
-    if prod:
-        res = str(get_cheapest_store_by_product_name(prod))
-    else:
-        res = ""
-    return (
-        """<form action="" method="get">
-                Get product: <input type="text" name="product_name">
-                <input type="submit" value="get product price">
-            </form>"""
-        + "Result: "
-        + res
-    )
-    
+@cross_origin()
+def hello():
+    return str({"hello":"world"}),200
+
 
 def create_secret(client):
     client.secrets.kv.v2.create_or_update_secret(path='secret-api-key', secret=dict(apikey='d35af1556ed30e0098eaf8c9bf829057b7cca565'))
@@ -71,8 +66,10 @@ def get_product_price_from_stores(api_key, product_id, store_list_id, url):
         stores_and_prices.append((store, price))
     return stores_and_prices
 
-@app.route("/<product_name>", methods=['GET'])
-def get_cheapest_store_by_product_name(product_name):
+@app.route("/myRoute/<productName>", methods=['GET'])
+@cross_origin()
+def get_cheapest_store_by_product_name(productName):
+    # store_list_id=[305] #, 29, 148]
     store_list_id = os.environ["STORE_LIST"][1:-1].split(", ")
 
     db_cursor = getMongoCursor()
@@ -85,7 +82,7 @@ def get_cheapest_store_by_product_name(product_name):
 
     # get product ID
     params = {"api_key": api_key,
-              "product_name": [product_name],
+              "product_name": [productName],
               "limit": 10,
               "action": "GetProductsByName"}
 
@@ -120,9 +117,14 @@ def get_cheapest_store_by_product_name(product_name):
     # insert document
     db_cursor.insert_one(data)
 
-    return dict({"store_id":stores_and_prices_sorted[0][0],
+    print({"store_id":stores_and_prices_sorted[0][0],
+            "price": stores_and_prices_sorted[0][1],
+            "vault": api_key})
+
+    
+    return str({"store_id":stores_and_prices_sorted[0][0],
                 "price": stores_and_prices_sorted[0][1],
-                "vault": api_key})
+                "vault": api_key}), 200
 
 
 # # Press the green button in the gutter to run the script.
