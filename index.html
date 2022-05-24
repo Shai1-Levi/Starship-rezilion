@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        var ip = location.host;
+        $(document).ready(function () {
+            $("button").click(function () {
+                usertext = $("#product_name").val()
+                $.get("http://" + ip + ":5000/myRoute/" + usertext, function (data, status) {
+                    data = JSON.stringify(data)
+                    console.log("Data: " + data);
+                    console.log("Status: " + status);
+                    $("#res").append(data);
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    Get product: <input type="text" id="product_name">
+    <button>get product price</button>
+    <br>
+    <output id="res"> Result: </output>
+</body>
+
+</html>

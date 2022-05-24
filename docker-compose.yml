@@ -1,11 +1,10 @@
 version: "3.7"
 services:
   web:
-    image: dockerid1011shai/website:v3
+    image: dockerid1011shai/website:v6
     container_name: webapp
     ports:
       - "5000:5000"
-
     environment:
       - STORE_LIST=[305, 29, 148]
       - API_KEY=d35af1556ed30e0098eaf8c9bf829057b7cca565
@@ -17,10 +16,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=citizix
       - MONGO_INITDB_ROOT_PASSWORD=S3cret
 
-    command: gunicorn --bind 0.0.0.0:5000 --timeout 600 "webapp_script:app"
-
-    volumes:
-      - ./:/apps
+    # volumes:
+    #   - ./:/apps
 
     links:
       - mongodb
@@ -28,22 +25,37 @@ services:
     depends_on:
       - mongodb
 
-    networks:
-        my-network:
-          aliases:
-            - web-app    
+    # networks:
+    #     my-network:
+    #       aliases:
+    #         - web-app
+    #     web-bridge:
+        # shai4458_default:
 
   nginx:
-    image: nginx:latest
+    image:  dockerid1011shai/nginx:v1
     container_name: nginx
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
+    # volumes:
+    #   - ./default.conf:/etc/nginx/conf.d/default.conf
+    #   - ./index.html:/usr/share/nginx/html/index.html
     ports:
       - 80:80
-    networks:
-      - my-network
+    # networks:
+    #   - my-network 
     depends_on:
       - web
+
+  vault:
+    image: vault:latest
+    container_name: vault
+    ports:
+      - 8200:8200
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=superget-api-key
+    # networks:
+    #   - web-bridge
 
   mongodb:
     image: mongo:5.0
@@ -51,11 +63,12 @@ services:
     hostname: mongoHost
     ports:
       - 27017:27017
-    volumes:
-      - ~/apps/mongo:/data/db
+    # volumes:
+    #   - ~/apps/mongo:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=citizix
       - MONGO_INITDB_ROOT_PASSWORD=S3cret
       
-networks:
-  my-network:
+# networks:
+#   my-network:
+#   web-bridge:

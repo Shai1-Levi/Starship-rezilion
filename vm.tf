@@ -46,22 +46,22 @@ resource "google_compute_firewall" "http-server" {
   target_tags   = ["http-server"] 
 }
 
-# resource "google_compute_firewall" "vault-rule" {
-#   project = local.project_id
-#   name    = "default-allow-vault-terraform"
-#   network = local.network
+resource "google_compute_firewall" "nginx-rule" {
+  project = local.project_id
+  name    = "default-allow-vault-terraform"
+  network = local.network
 
-#   allow {
-#     protocol = "tcp"
-#     ports    = ["8200"]
-#   }
+  allow {
+    protocol = "tcp"
+    ports    = ["5000"]
+  }
 
-#   priority = 1000
+  priority = 1000
 
-#   // Allow traffic from all IP to instances with an http-server tag
-#   source_ranges = ["0.0.0.0/0"]
-#   target_tags   = ["vault-rule"] 
-# }
+  // Allow traffic from all IP to instances with an http-server tag
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["nginx-rule"] 
+}
 
 resource "google_compute_firewall" "ssh-rule" {
   project = local.project_id
@@ -86,7 +86,7 @@ resource "google_compute_instance" "default" {
   machine_type          = each.value.machine_type
   zone                  = each.value.zone 
   project               = local.project_id
-  tags = ["http-server", "ssh-rule"] // Apply the firewall rule to allow external IPs to access this instance
+  tags = ["http-server", "ssh-rule", "nginx-rule"] // Apply the firewall rule to allow external IPs to access this instance
 
   boot_disk {
     initialize_params {
@@ -124,6 +124,11 @@ resource "google_compute_instance" "default" {
     destination = "default.conf"  
   }
 
+  provisioner "file"{
+    source      = "index.html"
+    destination = "index.html"  
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get -y  update",
@@ -151,21 +156,17 @@ resource "google_compute_instance" "default" {
 
       # run docker-compose
       "sudo docker compose up -d",
-      #"sudo docker rename shai4458-web-1 webapp",
+      # "sudo docker rename shai4458-web-1 webapp",
       "sudo docker network connect web-bridge webapp",
       "sudo docker network connect shai4458_default webapp",
 
       #install trivy
-      "sudo apt-get install wget apt-transport-https gnupg lsb-release",
-      "wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -",
-      "echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list",
-      "sudo apt-get update",
-      "sudo apt-get install trivy",
-      "trivy -d image -f json -o trivyoutput.json nginx"
+      # "sudo apt-get install wget apt-transport-https gnupg lsb-release",
+      # "wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -",
+      # "echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list",
+      # "sudo apt-get update",
+      # "sudo apt-get install trivy",
+      # "trivy -d image -f json -o trivyoutput.json nginx"
     ]
   }
 }
-
-
-
-
