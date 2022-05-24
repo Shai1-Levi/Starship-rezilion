@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: vault
+  name: vault
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: vault
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: vault
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              io.kompose.service: vault
+      containers:
+        - env:
+            - name: VAULT_DEV_ROOT_TOKEN_ID
+              value: superget-api-key
+          image: vault:latest
+          name: vault
+          ports:
+            - containerPort: 8200
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
+      restartPolicy: Always
+status: {}

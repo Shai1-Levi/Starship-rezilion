@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              io.kompose.service: web
+      containers:
+        - env:
+            - name: API_KEY
+              value: d35af1556ed30e0098eaf8c9bf829057b7cca565
+            - name: COLLECTION_NAME
+              value: collection
+            - name: DB_NAME
+              value: rezilion
+            - name: HOST
+              value: mongodb.default.svc.cluster.local
+            - name: ME_CONFIG_MONGODB_URL
+              value: mongodb://citizix:S3cret@127.0.0.1:27017/
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: S3cret
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: citizix
+            - name: PORT
+              value: "27017"
+            - name: STORE_LIST
+              value: '[305, 29, 148]'
+          image: dockerid1011shai/website:v6
+          name: webapp
+          ports:
+            - containerPort: 5000
+          resources: {}
+      restartPolicy: Always
+status: {}
