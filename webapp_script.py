@@ -46,7 +46,7 @@ def index():
     
 
 def create_secret(client):
-    client.secrets.kv.v2.create_or_update_secret(path='secret-api-key', secret=dict(apikey='d35af1556ed30e0098eaf8c9bf829057b7cca565'))
+    client.secrets.kv.v2.create_or_update_secret(path='secret-api-key', secret=dict(apikey='---'))
     print('Secret written successfully.')
 
 def read_secret(client):
