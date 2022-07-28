@@ -1,7 +1,7 @@
 variable "project_id" {
   type        = string
   description = "name of the project_id on gcp console"
-  default     = "elevated-valve-317623"
+  default     = "----"
 }
 variable "region" {
   type        = string
