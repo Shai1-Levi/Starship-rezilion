@@ -8,14 +8,14 @@ services:
 
     environment:
       - STORE_LIST=[305, 29, 148]
-      - API_KEY=d35af1556ed30e0098eaf8c9bf829057b7cca565
-      - ME_CONFIG_MONGODB_URL=mongodb://citizix:S3cret@127.0.0.1:27017/
+      - API_KEY=---
+      - ME_CONFIG_MONGODB_URL=mongodb://---:---@127.0.0.1:27017/
       - HOST=mongoHost
       - PORT=27017
       - DB_NAME=rezilion
       - COLLECTION_NAME=collection
-      - MONGO_INITDB_ROOT_USERNAME=citizix
-      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+      - MONGO_INITDB_ROOT_USERNAME=---
+      - MONGO_INITDB_ROOT_PASSWORD=---
 
     command: gunicorn --bind 0.0.0.0:5000 --timeout 600 "webapp_script:app"
 
@@ -54,8 +54,8 @@ services:
     volumes:
       - ~/apps/mongo:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=citizix
-      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+      - MONGO_INITDB_ROOT_USERNAME=---
+      - MONGO_INITDB_ROOT_PASSWORD=---
       
 networks:
   my-network:
